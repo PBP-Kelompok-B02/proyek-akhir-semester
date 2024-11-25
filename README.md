@@ -31,24 +31,24 @@
 ## Daftar Modul 📂
 1. *Account & Dashboard*
 
-   Modul *Account dan Dashboard* berfungsi sebagai pusat autentikasi sekaligus pusat kendali akun bagi pengguna yang sudah login. Pengguna yang terautentikasi dapat melakukan *login, **logout, **penggantian password, dan pengelolaan informasi terkait **profil* mereka. Hanya pengguna yang terautentikasi (bukan guest) yang dapat mengubah *password* dan *profil* mereka melalui dashboard. Jika *guest* mencoba mengakses dashboard, mereka akan langsung diarahkan ke *halaman login* atau *register*.
+   Modul *Account dan Dashboard* berfungsi sebagai pusat autentikasi sekaligus pusat kendali akun bagi pengguna yang sudah _login_. Pengguna yang terautentikasi dapat melakukan _login_, _logout_, penggantian _password_, dan pengelolaan informasi terkait profil mereka. Hanya pengguna yang terautentikasi (bukan _guest_) yang dapat mengubah _password_ dan _profil_ mereka melalui dashboard. Jika _guest_ mencoba mengakses _dashboard_, mereka akan langsung diarahkan ke *halaman _login_* atau *_register_*.
 
 2. *Homepage*
 
-   Modul *Homepage* berfungsi sebagai beranda utama aplikasi yang menampilkan berbagai informasi mengenai makanan serta berbagai fitur yang dapat diakses oleh *user* maupun *guest. Ketika makanan diklik, **user/guest* akan diarahkan ke *halaman detail makanan*.
+   Modul *Homepage* berfungsi sebagai beranda utama aplikasi yang menampilkan berbagai informasi mengenai makanan serta berbagai fitur yang dapat diakses oleh *_user_* maupun _guest_. Ketika makanan diklik, _user/guest_ akan diarahkan ke *halaman detail makanan*.
    Fitur-fitur yang akan diterapkan dalam modul ini:
      - *Pencarian dan Rekomendasi Makanan*
-       Pengguna dapat mencari berbagai jenis makanan yang tersedia di Yogyakarta melalui *search bar. Kemudian, makanan akan ditampilkan dengan urutan berdasarkan **rating tertinggi*.
+       Pengguna dapat mencari berbagai jenis makanan yang tersedia di Yogyakarta melalui _search_ _bar_. Kemudian, makanan akan ditampilkan dengan urutan berdasarkan *rating tertinggi*.
      - *Filter dan Sorting*
-       Pengguna bisa menggunakan *filter* untuk memilih makanan berdasarkan kategori tertentu, seperti *harga, **jenis kuliner*, dan lainnya.
+       Pengguna bisa menggunakan *_filter_* untuk memilih makanan berdasarkan kategori tertentu, seperti harga, *jenis kuliner*, dan lainnya.
      
 3. *Bookmark*
 
-   Modul *Bookmark* memberikan fitur kepada *user* untuk menyimpan makanan atau tempat makan favorit mereka agar dapat diakses kembali dengan mudah di lain waktu. Fitur ini hanya tersedia untuk *user* yang sudah login, sedangkan *guest* tidak memiliki akses untuk menambahkan bookmark dan akan diarahkan ke *halaman login* jika mencoba menggunakannya. Selain itu, pengguna juga dapat membuat label dan menyimpan makanan pada label tersebut 
+   Modul *Bookmark* memberikan fitur kepada *user* untuk menyimpan makanan atau tempat makan favorit mereka agar dapat diakses kembali dengan mudah di lain waktu. Fitur ini hanya tersedia untuk *user* yang sudah _login_, sedangkan *_guest_* tidak memiliki akses untuk menambahkan _bookmark_ dan akan diarahkan ke *halaman _login_* jika mencoba menggunakannya. Selain itu, pengguna juga dapat membuat label dan menyimpan makanan pada label tersebut 
 
 4. *Forum*  
 
-   Modul *Forum* memberikan akses kepada *user* untuk membuat dan berpartisipasi dalam diskusi terkait topik tertentu. Pengguna dapat memulai diskusi, memberikan tanggapan, serta berbagi informasi atau pengalaman mereka. Fitur-fitur yang diterapkan dalam modul ini:
+   Modul *Forum* memberikan akses kepada *_user_* untuk membuat dan berpartisipasi dalam diskusi terkait topik tertentu. Pengguna dapat memulai diskusi, memberikan tanggapan, serta berbagi informasi atau pengalaman mereka. Fitur-fitur yang diterapkan dalam modul ini:
      - *Membuat Forum Diskusi* 
        Pengguna yang terautentikasi dapat membuat forum baru terkait topik tertentu, seperti makanan, tempat makan, atau rekomendasi kuliner di Yogyakarta.
      - *Memberi Tanggapan*  
