@@ -75,7 +75,7 @@
 |------|-----------|
 | Memiliki akses lebih luas, seperti menyimpan daftar makanan (bookmark) dan berinteraksi dengan konten, misalnya memberikan ulasan. | Dapat menjelajahi aplikasi, tetapi hanya bisa melihat informasi tanpa melakukan tindakan lebih lanjut, seperti memberikan ulasan atau menyimpan bookmark. |
 
-## Alur Pengintegrasian dengan Aplikasi Web
+## Alur Pengintegrasian dengan Aplikasi Web 🌐
 1. Menambahkan _dependency_ http untuk mengelola pertukaran data melalui permintaan HTTP.
 2. Mengintegrasikan dukungan autentikasi berbasis cookie pada aplikasi dengan menggunakan _library_ pbp_django_auth.
 3. Membuat model sesuai dengan struktur data yang diterima dari web aplikasi proyek tengah semester.
