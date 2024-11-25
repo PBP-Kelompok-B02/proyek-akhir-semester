@@ -76,4 +76,11 @@
 | Memiliki akses lebih luas, seperti menyimpan daftar makanan (bookmark) dan berinteraksi dengan konten, misalnya memberikan ulasan. | Dapat menjelajahi aplikasi, tetapi hanya bisa melihat informasi tanpa melakukan tindakan lebih lanjut, seperti memberikan ulasan atau menyimpan bookmark. |
 
 ## Alur Pengintegrasian dengan Aplikasi Web
-....
+1. Menambahkan _dependency_ http untuk mengelola pertukaran data melalui permintaan HTTP.
+2. Mengintegrasikan dukungan autentikasi berbasis cookie pada aplikasi dengan menggunakan _library_ pbp_django_auth.
+3. Membuat model sesuai dengan struktur data yang diterima dari web aplikasi proyek tengah semester.
+4. Mengirim permintaan HTTP ke web service dengan memanfaatkan _library_ http.
+5. Mengimplementasikan REST API di Django melalui views.py dengan menggunakan Django Serializers atau JsonResponse.
+6. Mengonversi data yang diterima dari web service ke dalam objek model yang telah dibuat sebelumnya.
+7. Menampilkan data yang sudah dikonversi ke dalam aplikasi Flutter menggunakan _widget_ FutureBuilder.
+8. Melakukan integrasi antara antarmuka pengguna (_front-end_) dan logika sistem (_back-end_) dengan memanfaatkan konsep _asynchronous_ HTTP.
