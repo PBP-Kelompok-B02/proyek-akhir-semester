@@ -1,5 +1,5 @@
-// navbar.dart
 import 'package:flutter/material.dart';
+import 'package:proyek_akhir_semester/screens/search.dart';
 
 class CustomNavbar extends StatelessWidget {
   const CustomNavbar({super.key});
@@ -7,18 +7,19 @@ class CustomNavbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
-      color: const Color(0xFF592634), // Header color
+      color: const Color(0xFF592634),
       child: SizedBox(
         height: 60.0,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Add this line
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             // Home icon
             IconButton(
               icon: const Icon(Icons.home),
               color: const Color(0xFFFBFCF8),
               onPressed: () {
-                // Handle Home button press
+                // Navigate to Home page
+                Navigator.pushNamed(context, '/');
               },
             ),
             // Search icon
@@ -26,7 +27,11 @@ class CustomNavbar extends StatelessWidget {
               icon: const Icon(Icons.search),
               color: const Color(0xFFFBFCF8),
               onPressed: () {
-                // Handle Search button press
+                // Navigate to Search page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SearchPage()),
+                );
               },
             ),
             // Logo in the middle

@@ -1,4 +1,3 @@
-// custom_drawer.dart
 import 'package:flutter/material.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -16,7 +15,7 @@ class CustomDrawer extends StatelessWidget {
               color: Color(0xFF592634),
             ),
             child: Text(
-              'Drawer Header',
+              'Hi, User!',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
@@ -24,6 +23,13 @@ class CustomDrawer extends StatelessWidget {
             ),
           ),
           // Add drawer items here
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Logout'),
+            onTap: () {
+              // Handle logout action here
+            },
+          ),
         ],
       ),
     );
