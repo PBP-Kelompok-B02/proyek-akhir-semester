@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:proyek_akhir_semester/internal/auth.dart';
 import 'package:proyek_akhir_semester/widgets/drawer.dart';
 import 'package:proyek_akhir_semester/widgets/navbar.dart';
+import 'package:proyek_akhir_semester/models/food_entry.dart';
+import 'package:proyek_akhir_semester/widgets/food_card.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -10,15 +13,26 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
-  // Sample list of food items
-  final List<Map<String, String>> foodItems = [
-    {'name': 'Gudeg', 'image': 'assets/ayam.jpg', 'price': 'Rp 20.000'},
-    {'name': 'Bakpia', 'image': 'assets/ayam.jpg', 'price': 'Rp 15.000'},
-    {'name': 'Sate Klathak', 'image': 'assets/ayam.jpg', 'price': 'Rp 25.000'},
-    {'name': 'Nasi Goreng', 'image': 'assets/ayam.jpg', 'price': 'Rp 18.000'},
-    {'name': 'Mie Ayam', 'image': 'assets/ayam.jpg', 'price': 'Rp 12.000'},
-    {'name': 'Es Dawet', 'image': 'assets/ayam.jpg', 'price': 'Rp 10.000'},
-  ];
+
+  late Future<List<Food>> foodItemsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    foodItemsFuture = fetchFood(CookieRequest());
+  }
+
+  Future<List<Food>> fetchFood(CookieRequest request) async {
+    final response = await request.get("https://b02.up.railway.app/json/");
+    var data = response;
+    List<Food> listFood = [];
+    for (var d in data) {
+      if (d != null) {
+        listFood.add(Food.fromJson(d));
+      }
+    }
+    return listFood;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +47,12 @@ class _LandingPageState extends State<LandingPage> {
       drawer: const CustomDrawer(),
       bottomNavigationBar: const CustomNavbar(),
       body: Container(
-        color:
-            const Color(0xFFFBFCF8), // Set your desired background color here
+
+        color: const Color(0xFFFBFCF8),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Top section with header and other elements
+
               Container(
                 padding: const EdgeInsets.all(16.0),
                 color: const Color(0xFFFBFCF8),
@@ -54,17 +68,15 @@ class _LandingPageState extends State<LandingPage> {
                       'Discover the best food in Yogyakarta.',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    // Add other widgets here
                   ],
                 ),
               ),
-              // "For You" section
               Container(
                 padding: const EdgeInsets.all(16.0),
                 color: const Color(0xFFFBFCF8),
                 child: Column(
                   children: [
-                    // "For You" section title
+
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -73,40 +85,35 @@ class _LandingPageState extends State<LandingPage> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    // Food items grid
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: foodItems.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: crossAxisCount,
-                        crossAxisSpacing: 10.0,
-                        mainAxisSpacing: 10.0,
-                      ),
-                      itemBuilder: (context, index) {
-                        final item = foodItems[index];
-                        return Card(
-                          color: const Color(0xFFFBFCF8),
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                item['image']!,
-                                width: double.infinity,
-                                height: 100,
-                                fit: BoxFit.cover,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Text(item['name']!),
-                                    Text(item['price']!),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
+                    FutureBuilder<List<Food>>(
+                      future: foodItemsFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return const Text('No food items found.');
+                        } else {
+                          final foodItems = snapshot.data!;
+                          return GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: foodItems.length,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: crossAxisCount,
+                              crossAxisSpacing: 10.0,
+                              mainAxisSpacing: 10.0,
+                            ),
+                            itemBuilder: (context, index) {
+                              final item = foodItems[index];
+                              return FoodCard(food: item);
+                            },
+                          );
+                        }
                       },
                     ),
                   ],

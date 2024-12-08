@@ -1,49 +1,42 @@
 import 'package:flutter/material.dart';
 
+import 'package:proyek_akhir_semester/models/food_entry.dart';
+import 'package:proyek_akhir_semester/widgets/food_card.dart';
+
 class SearchResultsPage extends StatefulWidget {
   final String query;
-  final bool sortByPriceDescending;
-  final List<Map<String, String>> foodItems;
+  final List<Food> foodItems;
 
   const SearchResultsPage({
     super.key,
     required this.query,
-    required this.sortByPriceDescending,
     required this.foodItems,
   });
 
   @override
-  _SearchResultsPageState createState() => _SearchResultsPageState();
+  State<SearchResultsPage> createState() => _SearchResultsPageState();
 }
 
 class _SearchResultsPageState extends State<SearchResultsPage> {
-  late bool sortByPriceDescending;
+  bool sortByPriceDescending = false;
 
-  @override
-  void initState() {
-    super.initState();
-    sortByPriceDescending = widget.sortByPriceDescending;
-  }
-
-  List<Map<String, String>> get filteredAndSortedItems {
-    List<Map<String, String>> filteredItems = widget.foodItems
-        .where((item) =>
-            item['name']!.toLowerCase().contains(widget.query.toLowerCase()))
-        .toList();
-
-    if (sortByPriceDescending) {
-      filteredItems.sort((a, b) =>
-          _parsePrice(b['price']!).compareTo(_parsePrice(a['price']!)));
-    } else {
-      filteredItems.sort((a, b) =>
-          _parsePrice(a['price']!).compareTo(_parsePrice(b['price']!)));
-    }
-
-    return filteredItems;
-  }
-
-  int _parsePrice(String price) {
-    return int.parse(price.replaceAll(RegExp(r'[^0-9]'), ''));
+  void _toggleSortOrder() {
+    setState(() {
+      sortByPriceDescending = !sortByPriceDescending;
+      widget.foodItems.sort((a, b) {
+        double priceA = double.tryParse(
+                a.fields.price.replaceAll(RegExp(r'[^0-9.]'), '')) ??
+            0;
+        double priceB = double.tryParse(
+                b.fields.price.replaceAll(RegExp(r'[^0-9.]'), '')) ??
+            0;
+        if (sortByPriceDescending) {
+          return priceB.compareTo(priceA);
+        } else {
+          return priceA.compareTo(priceB);
+        }
+      });
+    });
   }
 
   @override
@@ -57,60 +50,42 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
         backgroundColor: const Color(0xFF592634),
       ),
       body: Container(
-        color:
-            const Color(0xFFFBFCF8), // Set your desired background color here
+
+        color: const Color(0xFFFBFCF8),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+
                 children: [
+                  Text(
+                    'Results for "${widget.query}"',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  const Spacer(),
                   IconButton(
                     icon: Icon(
                       sortByPriceDescending
                           ? Icons.arrow_downward
                           : Icons.arrow_upward,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        sortByPriceDescending = !sortByPriceDescending;
-                      });
-                    },
+                    onPressed: _toggleSortOrder,
                   ),
                 ],
               ),
               Expanded(
                 child: GridView.builder(
-                  itemCount: filteredAndSortedItems.length,
+                  itemCount: widget.foodItems.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: crossAxisCount,
                     crossAxisSpacing: 10.0,
                     mainAxisSpacing: 10.0,
+                    childAspectRatio: 0.7,
                   ),
                   itemBuilder: (context, index) {
-                    final item = filteredAndSortedItems[index];
-                    return Card(
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            item['image']!,
-                            width: double.infinity,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Text(item['name']!),
-                                Text('Rp ${item['price']}'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                    final item = widget.foodItems[index];
+                    return FoodCard(food: item);
                   },
                 ),
               ),
