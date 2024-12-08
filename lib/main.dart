@@ -15,7 +15,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Provider(
       create: (_) {
         CookieRequest request = CookieRequest();
@@ -119,18 +118,6 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
-
-    return MaterialApp(
-      title: 'YumYogya',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF592634)),
-      ),
-      home: const LandingPage(),
-      routes: {
-        '/search': (context) => const SearchPage(),
-        // Add other routes here
-      },
-
     );
   }
 }
