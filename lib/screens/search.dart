@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:proyek_akhir_semester/internal/auth.dart';
 import 'package:proyek_akhir_semester/models/food_entry.dart';
 import 'search_results.dart';
@@ -135,7 +136,6 @@ class _SearchPageState extends State<SearchPage> {
     _maxPriceController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,6 +144,7 @@ class _SearchPageState extends State<SearchPage> {
         backgroundColor: const Color(0xFF592634),
       ),
       body: Container(
+
         color: const Color(0xFFFBFCF8),
         child: Padding(
           padding: const EdgeInsets.all(16.0),

@@ -13,6 +13,7 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
+
   late Future<List<Food>> foodItemsFuture;
 
   @override
@@ -46,10 +47,12 @@ class _LandingPageState extends State<LandingPage> {
       drawer: const CustomDrawer(),
       bottomNavigationBar: const CustomNavbar(),
       body: Container(
+
         color: const Color(0xFFFBFCF8),
         child: SingleChildScrollView(
           child: Column(
             children: [
+
               Container(
                 padding: const EdgeInsets.all(16.0),
                 color: const Color(0xFFFBFCF8),
@@ -73,6 +76,7 @@ class _LandingPageState extends State<LandingPage> {
                 color: const Color(0xFFFBFCF8),
                 child: Column(
                   children: [
+
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(

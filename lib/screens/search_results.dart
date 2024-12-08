@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:proyek_akhir_semester/models/food_entry.dart';
 import 'package:proyek_akhir_semester/widgets/food_card.dart';
 
@@ -49,12 +50,14 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
         backgroundColor: const Color(0xFF592634),
       ),
       body: Container(
+
         color: const Color(0xFFFBFCF8),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
               Row(
+
                 children: [
                   Text(
                     'Results for "${widget.query}"',
