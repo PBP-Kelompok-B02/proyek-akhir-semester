@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:proyek_akhir_semester/dashboard/profile.dart';
 import 'package:proyek_akhir_semester/main.dart';
 import 'package:proyek_akhir_semester/screens/register.dart';
 import '../internal/auth.dart';
-// TODO: Import halaman RegisterPage jika sudah dibuat
 
 void main() {
   runApp(const LoginApp());
@@ -116,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const MyHomePage(title: 'Yumyogya',)),
+                                builder: (context) => const Dashboard()),
                           );
                           ScaffoldMessenger.of(context)
                             ..hideCurrentSnackBar()
