@@ -3,6 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:proyek_akhir_semester/screens/login.dart';
 import 'package:proyek_akhir_semester/Forum/screens/forum_page.dart';
 import 'internal/auth.dart';
+import 'screens/landing_page.dart';
+import 'screens/search.dart';
+import 'screens/search_results.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -34,15 +38,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
