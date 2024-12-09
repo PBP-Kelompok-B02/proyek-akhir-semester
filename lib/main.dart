@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyek_akhir_semester/screens/login.dart';
 import 'internal/auth.dart';
+import 'screens/landing_page.dart';
+import 'screens/search.dart';
+import 'screens/search_results.dart';
+
 
 void main() {
   runApp(const MyApp());
