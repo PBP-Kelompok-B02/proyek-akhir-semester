@@ -21,8 +21,25 @@ class BookmarksPage extends StatelessWidget {
               child: Text('No bookmarked foods yet'),
             );
           }
-          return ListView.builder(
-            padding: const EdgeInsets.all(8),
+
+          final screenWidth = MediaQuery.of(context).size.width;
+
+          // Calculate number of columns based on screen width
+          final crossAxisCount = switch (screenWidth) {
+            < 600 => 1, // Mobile
+            < 900 => 2, // Tablet
+            < 1200 => 3, // Small desktop
+            _ => 4, // Large desktop
+          };
+
+          return GridView.builder(
+            padding: const EdgeInsets.all(16),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              childAspectRatio: 0.8,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+            ),
             itemCount: bookmarkedFoods.length,
             itemBuilder: (context, index) {
               return FoodCard(food: bookmarkedFoods.elementAt(index));
