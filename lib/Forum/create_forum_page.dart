@@ -52,7 +52,7 @@ class _CreateForumPageState extends State<CreateForumPage> {
                 floating: false,
                 pinned: true,
                 flexibleSpace: FlexibleSpaceBar(
-                  title: Row(
+                  title: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.edit, color: Colors.white, size: 24),
@@ -98,7 +98,7 @@ class _CreateForumPageState extends State<CreateForumPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Title Input
-                            Text(
+                            const Text(
                               'Judul Forum',
                               style: TextStyle(
                                 fontSize: 16,
@@ -121,7 +121,7 @@ class _CreateForumPageState extends State<CreateForumPage> {
                             const SizedBox(height: 20),
 
                             // Description Input
-                            Text(
+                            const Text(
                               'Deskripsi',
                               style: TextStyle(
                                 fontSize: 16,
@@ -194,7 +194,7 @@ class _CreateForumPageState extends State<CreateForumPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      CircularProgressIndicator(
+                      const CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(
                           Color(0xFF982B1C),
                         ),

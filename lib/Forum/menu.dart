@@ -102,7 +102,7 @@ class ForumPage extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Diskusi Terbaru',
                         style: TextStyle(
                           fontSize: 28,
@@ -117,8 +117,8 @@ class ForumPage extends StatelessWidget {
                             MaterialPageRoute(builder: (context) => const CreateForumPage()),
                           );
                         },
-                        icon: Icon(Icons.add, color: Colors.white),
-                        label: Text(
+                        icon: const Icon(Icons.add, color: Colors.white),
+                        label: const Text(
                           'Tambah Forum Baru',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -138,7 +138,7 @@ class ForumPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                ...forums.map((forum) => ForumCard(forum: forum)).toList(),
+                ...forums.map((forum) => ForumCard(forum: forum)),
               ]),
             ),
           ),
@@ -201,7 +201,7 @@ class _CreateForumPageState extends State<CreateForumPage> {
                 pinned: true,
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
-                  title: Row(
+                  title: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.edit, color: Colors.white, size: 24),
@@ -244,7 +244,7 @@ class _CreateForumPageState extends State<CreateForumPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               'Judul Forum',
                               style: TextStyle(
                                 fontSize: 16,
@@ -265,7 +265,7 @@ class _CreateForumPageState extends State<CreateForumPage> {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            Text(
+                            const Text(
                               'Deskripsi',
                               style: TextStyle(
                                 fontSize: 16,
@@ -335,7 +335,7 @@ class _CreateForumPageState extends State<CreateForumPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      CircularProgressIndicator(
+                      const CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(
                           Color(0xFF800000),
                         ),
@@ -375,7 +375,7 @@ class ForumCard extends StatelessWidget {
           children: [
             Text(
               forum.title,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF800000),
@@ -384,7 +384,7 @@ class ForumCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               forum.description,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 color: Colors.black87,
               ),
@@ -398,7 +398,7 @@ class ForumCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            Text(
+            const Text(
               'Tanggapan',
               style: TextStyle(
                 fontSize: 20,
@@ -407,7 +407,7 @@ class ForumCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            ...forum.replies.map((reply) => ReplyCard(reply: reply)).toList(),
+            ...forum.replies.map((reply) => ReplyCard(reply: reply)),
             const SizedBox(height: 20),
             TextField(
               decoration: InputDecoration(
@@ -432,7 +432,7 @@ class ForumCard extends StatelessWidget {
                     vertical: 12,
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Kirim Tanggapan',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -465,7 +465,7 @@ class ReplyCard extends StatelessWidget {
         children: [
           Text(
             reply.content,
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
           ),
           const SizedBox(height: 8),
           Text(

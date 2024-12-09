@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'YumYogya',
       theme: ThemeData(
-        colorScheme: ColorScheme.light().copyWith(
+        colorScheme: const ColorScheme.light().copyWith(
           primary: const Color(0xFF800000),    // dark red untuk primary color
           secondary: const Color(0xFF800000),   // dark red untuk secondary color
         ),

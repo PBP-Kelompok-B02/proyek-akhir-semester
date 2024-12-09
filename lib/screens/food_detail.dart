@@ -5,9 +5,9 @@ class FoodDetailPage extends StatelessWidget {
   final Food food;
 
   const FoodDetailPage({
-    Key? key,
+    super.key,
     required this.food,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -53,11 +53,11 @@ class FoodDetailPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
                 'Description:',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),

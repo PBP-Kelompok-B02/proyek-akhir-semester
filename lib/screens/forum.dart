@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ForumPage extends StatefulWidget {
+  const ForumPage({super.key});
+
   @override
   _ForumPageState createState() => _ForumPageState();
 }
@@ -25,17 +27,17 @@ class _ForumPageState extends State<ForumPage> {
 
   Widget _buildTextComposer() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
         children: [
           Expanded(
             child: TextField(
               controller: _textController,
-              decoration: InputDecoration.collapsed(hintText: 'Write a post'),
+              decoration: const InputDecoration.collapsed(hintText: 'Write a post'),
             ),
           ),
           IconButton(
-            icon: Icon(Icons.send),
+            icon: const Icon(Icons.send),
             onPressed: () => _addPost(_textController.text),
           ),
         ],
@@ -47,7 +49,7 @@ class _ForumPageState extends State<ForumPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Forum'),
+        title: const Text('Forum'),
       ),
       body: Column(
         children: [
@@ -60,7 +62,7 @@ class _ForumPageState extends State<ForumPage> {
               },
             ),
           ),
-          Divider(height: 1.0),
+          const Divider(height: 1.0),
           _buildTextComposer(),
         ],
       ),

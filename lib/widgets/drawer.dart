@@ -24,8 +24,8 @@ class CustomDrawer extends StatelessWidget {
           ),
           // Add drawer items here
           ListTile(
-            leading: Icon(Icons.exit_to_app),
-            title: Text('Logout'),
+            leading: const Icon(Icons.exit_to_app),
+            title: const Text('Logout'),
             onTap: () {
               // Handle logout action here
             },

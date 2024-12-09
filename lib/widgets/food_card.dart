@@ -6,9 +6,9 @@ class FoodCard extends StatelessWidget {
   final Food food;
 
   const FoodCard({
-    Key? key,
+    super.key,
     required this.food,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
