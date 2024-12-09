@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proyek_akhir_semester/screens/search.dart';
-import 'package:proyek_akhir_semester/screens/bookmarks.dart';
+import 'package:proyek_akhir_semester/screens/bookmarks_page.dart';
 import 'package:proyek_akhir_semester/screens/dashboard.dart';
 import 'package:proyek_akhir_semester/screens/forum.dart';
 
