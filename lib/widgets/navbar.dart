@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:proyek_akhir_semester/screens/search.dart';
 import 'package:proyek_akhir_semester/screens/bookmarks_page.dart';
 import 'package:proyek_akhir_semester/screens/dashboard.dart';
-import 'package:proyek_akhir_semester/screens/forum.dart';
+import 'package:proyek_akhir_semester/screens/forum_page.dart'; // Pastikan file ini ada dan benar
+
+
+
 
 class CustomNavbar extends StatelessWidget {
   const CustomNavbar({super.key});
@@ -16,15 +19,14 @@ class CustomNavbar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // Home icon
+            // Forum icon
             IconButton(
               icon: const Icon(Icons.chat),
               color: const Color(0xFFFBFCF8),
               onPressed: () {
-                // Navigate to Forum page
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ForumPage()),
+                  MaterialPageRoute(builder: (context) => const ForumPage()), // Pastikan ForumPage didefinisikan
                 );
               },
             ),
@@ -33,7 +35,6 @@ class CustomNavbar extends StatelessWidget {
               icon: const Icon(Icons.search),
               color: const Color(0xFFFBFCF8),
               onPressed: () {
-                // Navigate to Search page
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const SearchPage()),
@@ -45,7 +46,8 @@ class CustomNavbar extends StatelessWidget {
               width: 60,
               height: 60,
               child: Image.asset(
-                'assets/logo.png', // Ensure this path is correct
+                'assets/logo.png', // Pastikan path ini sesuai dengan lokasi logo Anda
+                fit: BoxFit.contain,
               ),
             ),
             // Bookmark icon
@@ -67,7 +69,7 @@ class CustomNavbar extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ProfilePage()),
+                  MaterialPageRoute(builder: (context) => const ProfilePage()), // Pastikan ProfilePage didefinisikan
                 );
               },
             ),
