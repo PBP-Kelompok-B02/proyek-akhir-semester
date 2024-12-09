@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:proyek_akhir_semester/screens/search.dart';
+import 'package:proyek_akhir_semester/screens/landing_page.dart';
+import 'package:proyek_akhir_semester/screens/bookmarks.dart';
+import 'package:proyek_akhir_semester/screens/dashboard.dart';
+import 'package:proyek_akhir_semester/screens/forum.dart';
 
 class CustomNavbar extends StatelessWidget {
   const CustomNavbar({super.key});
@@ -15,11 +19,14 @@ class CustomNavbar extends StatelessWidget {
           children: [
             // Home icon
             IconButton(
-              icon: const Icon(Icons.home),
+              icon: const Icon(Icons.chat),
               color: const Color(0xFFFBFCF8),
               onPressed: () {
-                // Navigate to Home page
-                Navigator.pushNamed(context, '/');
+                // Navigate to Forum page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ForumPage()),
+                );
               },
             ),
             // Search icon
@@ -47,7 +54,11 @@ class CustomNavbar extends StatelessWidget {
               icon: const Icon(Icons.bookmark),
               color: const Color(0xFFFBFCF8),
               onPressed: () {
-                // Handle Bookmark button press
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const BookmarksPage()),
+                );
               },
             ),
             // Profile icon
@@ -55,7 +66,10 @@ class CustomNavbar extends StatelessWidget {
               icon: const Icon(Icons.person),
               color: const Color(0xFFFBFCF8),
               onPressed: () {
-                // Handle Profile button press
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfilePage()),
+                );
               },
             ),
           ],
