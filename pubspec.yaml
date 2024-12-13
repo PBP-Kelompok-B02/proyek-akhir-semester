@@ -38,6 +38,7 @@ dependencies:
   image_picker: ^1.1.2 # Tambahkan ini
 
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
