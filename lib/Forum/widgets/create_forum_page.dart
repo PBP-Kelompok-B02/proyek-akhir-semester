@@ -1,141 +1,247 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:proyek_akhir_semester/Forum/menu.dart';
+import 'dart:convert';
+
 import 'package:proyek_akhir_semester/internal/auth.dart';
 
-// create_forum_page.dart
 class CreateForumPage extends StatefulWidget {
-  const CreateForumPage({Key? key}) : super(key: key);
+  const CreateForumPage({super.key});
 
   @override
   State<CreateForumPage> createState() => _CreateForumPageState();
 }
 
 class _CreateForumPageState extends State<CreateForumPage> {
-  final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  String _judul = "";
+  String _deskripsi = "";
   bool _isLoading = false;
 
-  Future<void> _createForum() async {
-    if (_titleController.text.isEmpty || _descriptionController.text.isEmpty) {
-      return;
-    }
-
-    setState(() => _isLoading = true);
-    final request = context.read<CookieRequest>();
+  Future<void> _submitForm() async {
+  if (_formKey.currentState!.validate()) {
+    setState(() {
+      _isLoading = true;
+    });
 
     try {
+      // Gunakan CookieRequest untuk autentikasi
+      final request = context.read<CookieRequest>();
+      
       final response = await request.postJson(
         'https://b02.up.railway.app/forum/submit-forum/mobile/',
-        jsonEncode(<String, String>{
-          'title': _titleController.text,
-          'description': _descriptionController.text,
+        jsonEncode({
+          'title': _judul,
+          'description': _deskripsi,
         }),
       );
 
       if (response['status'] == 'success') {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Forum berhasil dibuat!"))
-          );
-          // Kembali ke ForumPage dengan refresh
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => ForumPage()),
-          );
-        }
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Forum berhasil dibuat!"),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pop(context, true);
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response['message'] ?? 'Gagal membuat forum'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     } catch (e) {
       print('Error creating forum: $e');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Terjadi kesalahan. Silakan coba lagi.'),
+          backgroundColor: Colors.red,
+        ),
+      );
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Buat Forum Baru',
-          style: TextStyle(color: Colors.white),
-        ),
         backgroundColor: const Color(0xFF8B0000),
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        title: const Row(
           children: [
-            const Text(
-              'Judul Forum',
-              style: TextStyle(color: Color(0xFF8B0000)),
+            Icon(Icons.edit, color: Colors.white),
+            SizedBox(width: 8),
+            Text(
+              'Buat Forum Baru',
+              style: TextStyle(color: Colors.white),
             ),
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                hintText: 'Masukkan judul forum yang menarik',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Deskripsi',
-              style: TextStyle(color: Color(0xFF8B0000)),
-            ),
-            TextField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(
-                hintText: 'Jelaskan detail topik yang ingin Anda diskusikan...',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 4,
-            ),
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          ],
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Kembali'),
-                ),
-                ElevatedButton(
-                  onPressed: _isLoading ? null : () async {
-                    setState(() => _isLoading = true);
-                    
-                    try {
-                      await _createForum();
-                      if (mounted) {  // Tambahkan pengecekan mounted
-                        Navigator.pop(context, true);
-                      }
-                    } finally {
-                      if (mounted) {  // Tambahkan ini
-                        setState(() => _isLoading = false);
-                      }
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF8B0000),
-                    foregroundColor: Colors.white,
+                const Text(
+                  'Diskusikan topik kuliner yang Anda inginkan di YumYogya',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
                   ),
-                  child: _isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
+                ),
+                const SizedBox(height: 24),
+                
+                // Judul Forum Section
+                Row(
+                  children: [
+                    const Icon(Icons.title, color: Color(0xFF8B0000)),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'Judul Forum',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF8B0000),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Masukkan judul forum yang menarik',
+                    hintStyle: TextStyle(color: Colors.grey[400]),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    suffixIcon: const Icon(Icons.edit),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Judul forum tidak boleh kosong';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    _judul = value;
+                  },
+                ),
+                const SizedBox(height: 24),
+                
+                // Deskripsi Section
+                Row(
+                  children: [
+                    const Icon(Icons.description, color: Color(0xFF8B0000)),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'Deskripsi',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF8B0000),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    hintText: 'Jelaskan detail topik yang ingin Anda diskusikan...',
+                    hintStyle: TextStyle(color: Colors.grey[400]),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    suffixIcon: const Icon(Icons.message),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Deskripsi tidak boleh kosong';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    _deskripsi = value;
+                  },
+                ),
+                const SizedBox(height: 24),
+                
+                // Buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          side: const BorderSide(color: Color(0xFF8B0000)),
                         ),
-                      )
-                    : const Text('Buat Forum'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.arrow_back, color: Color(0xFF8B0000)),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'Kembali',
+                              style: TextStyle(color: Color(0xFF8B0000)),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF8B0000),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                        onPressed: _isLoading ? null : _submitForm,
+                        child: _isLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.add, color: Colors.white),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Buat Forum',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );

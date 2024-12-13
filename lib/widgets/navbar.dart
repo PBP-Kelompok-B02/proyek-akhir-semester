@@ -3,7 +3,7 @@ import 'package:proyek_akhir_semester/screens/search.dart';
 import 'package:proyek_akhir_semester/screens/landing_page.dart';
 import 'package:proyek_akhir_semester/screens/bookmarks.dart';
 import 'package:proyek_akhir_semester/screens/dashboard.dart';
-import 'package:proyek_akhir_semester/screens/forum.dart';
+import 'package:proyek_akhir_semester/Forum/screens/forum_page.dart';
 
 class CustomNavbar extends StatelessWidget {
   const CustomNavbar({super.key});
@@ -25,7 +25,9 @@ class CustomNavbar extends StatelessWidget {
                 // Navigate to Forum page
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ForumPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const ForumPage()
+                  ),
                 );
               },
             ),
