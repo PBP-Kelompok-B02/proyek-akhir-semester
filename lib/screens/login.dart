@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:proyek_akhir_semester/main.dart';
 import 'package:proyek_akhir_semester/screens/landing_page.dart';
 import 'package:proyek_akhir_semester/screens/register.dart';
 import '../internal/auth.dart';
-// TODO: Import halaman RegisterPage jika sudah dibuat
 
 void main() {
   runApp(const LoginApp());
