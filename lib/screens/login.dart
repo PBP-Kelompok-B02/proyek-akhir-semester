@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:proyek_akhir_semester/main.dart';
+import 'package:proyek_akhir_semester/screens/landing_page.dart';
 import 'package:proyek_akhir_semester/screens/register.dart';
 import '../internal/auth.dart';
-// TODO: Import halaman RegisterPage jika sudah dibuat
 
 void main() {
   runApp(const LoginApp());
@@ -103,52 +102,51 @@ class _LoginPageState extends State<LoginPage> {
                       // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
                       // Untuk menyambungkan Android emulator dengan Django pada localhost,
                       // gunakan URL http://10.0.2.2/
-                      try{
+                      try {
                         final response = await request
-                          .login("https://b02.up.railway.app/auth/login/", {
-                        'username': username,
-                        'password': password,
-                      });
-                      if (request.loggedIn) {
-                        String message = response['message'];
-                        String uname = response['username'];
-                        if (context.mounted) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const MyHomePage(title: 'Yumyogya',)),
-                          );
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(
-                              SnackBar(
-                                  content:
-                                      Text("$message Selamat datang, $uname.")),
+                            .login("https://b02.up.railway.app/auth/login/", {
+                          'username': username,
+                          'password': password,
+                        });
+                        if (request.loggedIn) {
+                          String message = response['message'];
+                          String uname = response['username'];
+                          if (context.mounted) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LandingPage()),
                             );
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                    content: Text(
+                                        "$message Selamat datang, $uname.")),
+                              );
+                          }
+                        } else {
+                          if (context.mounted) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Login Gagal'),
+                                content: Text(response['message']),
+                                actions: [
+                                  TextButton(
+                                    child: const Text('OK'),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
                         }
-                      } else {
-                        if (context.mounted) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Login Gagal'),
-                              content: Text(response['message']),
-                              actions: [
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      }
                       } catch (e) {
                         print(e);
                       }
-                      
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
