@@ -5,8 +5,8 @@ import '../internal/auth.dart';
 import 'package:proyek_akhir_semester/models/food_entry.dart';
 
 class EditFoodPage extends StatefulWidget {
-  final int foodId;
-  
+  final String foodId;
+
   const EditFoodPage({super.key, required this.foodId});
 
   @override
@@ -85,7 +85,7 @@ class _EditFoodPageState extends State<EditFoodPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
-    
+
     if (_isLoading) {
       return Scaffold(
         appBar: AppBar(
