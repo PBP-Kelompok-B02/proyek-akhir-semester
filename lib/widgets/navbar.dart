@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:proyek_akhir_semester/dashboard/profile.dart';
 import 'package:proyek_akhir_semester/screens/search.dart';
 import 'package:proyek_akhir_semester/screens/bookmarks_page.dart';
-import 'package:proyek_akhir_semester/screens/dashboard.dart';
 import 'package:proyek_akhir_semester/screens/forum_page.dart'; // Pastikan file ini ada dan benar
 
 
@@ -69,7 +69,7 @@ class CustomNavbar extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ProfilePage()), // Pastikan ProfilePage didefinisikan
+                  MaterialPageRoute(builder: (context) => const Dashboard()), // Pastikan ProfilePage didefinisikan
                 );
               },
             ),

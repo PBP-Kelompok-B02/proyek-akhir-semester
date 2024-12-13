@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:proyek_akhir_semester/models/food_entry.dart';
 
 class FoodDetailPage extends StatefulWidget {
   final String foodId;
 
   const FoodDetailPage({
-    super.key,
+    Key? key,
     required this.foodId,
-  });
+  }) : super(key: key);
 
   @override
   _FoodDetailPageState createState() => _FoodDetailPageState();
