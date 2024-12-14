@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
-import '../internal/auth.dart';
+import '../../internal/auth.dart';
 import 'package:proyek_akhir_semester/models/food_entry.dart';
-import 'package:proyek_akhir_semester/dashboard/edit_food.dart';
+import 'package:proyek_akhir_semester/dashboard/screens/edit_food.dart';
 
 class UserFoodCard extends StatelessWidget {
   final Food food;
@@ -138,7 +138,7 @@ class UserFoodCard extends StatelessWidget {
                                 final request = context.read<CookieRequest>();
                                 try {
                                   final response = await request.postJson(
-                                    "https://b02.up.railway.app/profile/delete-food/${food.pk}/",
+                                    "https://b02.up.railway.app/profile/delete-flutter/${food.pk}/",
                                     jsonEncode({
                                       'id': food.pk,
                                     }),

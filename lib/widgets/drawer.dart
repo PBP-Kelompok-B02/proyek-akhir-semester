@@ -14,46 +14,58 @@ class CustomDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
+          DrawerHeader(
+            decoration: const BoxDecoration(
               color: Color(0xFF592634),
             ),
             child: Text(
-              'Hi, User!',
-              style: TextStyle(
+              request.loggedIn ? 'Hi, User!' : 'Welcome, Guest!',
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 24,
               ),
             ),
           ),
-          // Add drawer items here
-          ListTile(
-            leading: const Icon(Icons.exit_to_app),
-            title: const Text('Logout'),
-            onTap: () async {
-              final response = await request.logout("https://b02.up.railway.app/auth/logout/");
-              String message = response["message"];
-              if (context.mounted) {
-                  if (response['status']) {
-                      String uname = response["username"];
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("$message Sampai jumpa, $uname."),
-                      ));
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => const LoginPage()),
-                      );
-                  } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text(message),
-                          ),
-                      );
-                  }
-              }
-              // Handle logout action here
-            },
-          ),
+          if (request.loggedIn) 
+            // Show Logout button for logged in users
+            ListTile(
+              leading: const Icon(Icons.exit_to_app),
+              title: const Text('Logout'),
+              onTap: () async {
+                final response = await request.logout("https://b02.up.railway.app/auth/logout/");
+                String message = response["message"];
+                if (context.mounted) {
+                    if (response['status']) {
+                        String uname = response["username"];
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("$message Sampai jumpa, $uname."),
+                        ));
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => const LoginPage()),
+                        );
+                    } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(message),
+                            ),
+                        );
+                    }
+                }
+              },
+            )
+          else
+            // Show Login button for guests
+            ListTile(
+              leading: const Icon(Icons.login),
+              title: const Text('Login'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                );
+              },
+            ),
         ],
       ),
     );
