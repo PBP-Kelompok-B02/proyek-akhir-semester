@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:proyek_akhir_semester/models/food_entry.dart';
+import 'package:provider/provider.dart';
+import 'package:proyek_akhir_semester/internal/auth.dart';
 
 class FoodDetailPage extends StatefulWidget {
   final String foodId;
@@ -18,6 +20,7 @@ class FoodDetailPage extends StatefulWidget {
 class _FoodDetailPageState extends State<FoodDetailPage> {
   late Map<String, dynamic> foodDetails;
   bool isLoading = true;
+  final TextEditingController _reviewController = TextEditingController();
 
   @override
   void initState() {
@@ -42,6 +45,64 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
       });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Failed to fetch food details')),
+      );
+    }
+  }
+
+  Future<void> submitReview() async {
+    if (_reviewController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Review tidak boleh kosong')),
+      );
+      return;
+    }
+
+    final request = context.read<CookieRequest>();
+
+    try {
+      final response = await request.post(
+        'https://b02.up.railway.app/food-details/json/${widget.foodId}/',
+        {
+          'review': _reviewController.text,
+        },
+      );
+
+      if (response['success'] == true) {
+        _reviewController.clear();
+        fetchFoodDetails(); // Refresh the reviews
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Review berhasil ditambahkan')),
+        );
+      } else {
+        throw Exception('Failed to submit review');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Gagal mengirim review')),
+      );
+    }
+  }
+
+  Future<void> deleteReview(int reviewId) async {
+    final request = context.read<CookieRequest>();
+
+    try {
+      final response = await request.post(
+        'https://b02.up.railway.app/food-details/json/delete-review/$reviewId/',
+        {},
+      );
+
+      if (response['status'] == 'success') {
+        fetchFoodDetails(); // Refresh the reviews
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Review berhasil dihapus')),
+        );
+      } else {
+        throw Exception('Failed to delete review');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Gagal menghapus review')),
       );
     }
   }
@@ -153,6 +214,8 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                       separatorBuilder: (context, index) => const Divider(),
                       itemBuilder: (context, index) {
                         final review = foodDetails['reviews'][index];
+                        final isCurrentUser = review['is_owner'] ?? false;
+
                         return ListTile(
                           leading: CircleAvatar(
                             backgroundColor: Colors.brown[100],
@@ -168,9 +231,46 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                                 color: Colors.brown),
                           ),
                           subtitle: Text(review['review']),
+                          trailing: isCurrentUser
+                              ? IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () => deleteReview(review['id']),
+                                  color: Colors.red,
+                                )
+                              : null,
                         );
                       },
                     ),
+
+              // Add review form at the bottom
+              if (context.watch<CookieRequest>().loggedIn) ...[
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _reviewController,
+                  decoration: const InputDecoration(
+                    labelText: 'Tulis ulasan Anda',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 3,
+                ),
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: submitReview,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(221, 255, 255, 255),
+                  ),
+                  child: const Text('Kirim Ulasan'),
+                ),
+              ] else ...[
+                const SizedBox(height: 16),
+                const Text(
+                  'Silakan login untuk memberikan ulasan',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
             ],
           ),
         ),
