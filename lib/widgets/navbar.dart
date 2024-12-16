@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:proyek_akhir_semester/dashboard/screens/profile.dart';
 import 'package:proyek_akhir_semester/screens/search.dart';
 import 'package:proyek_akhir_semester/screens/bookmarks_page.dart';
-import 'package:proyek_akhir_semester/screens/dashboard.dart';
-import 'package:proyek_akhir_semester/screens/forum_page.dart'; // Pastikan file ini ada dan benar
-
-
-
+import 'package:proyek_akhir_semester/Forum/screens/forum_page.dart';
+import 'package:proyek_akhir_semester/screens/login.dart'; 
+import '../internal/auth.dart';  
 
 class CustomNavbar extends StatelessWidget {
   const CustomNavbar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>(); 
+
     return BottomAppBar(
       color: const Color(0xFF592634),
       child: SizedBox(
@@ -26,7 +28,8 @@ class CustomNavbar extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ForumPage()), // Pastikan ForumPage didefinisikan
+                  MaterialPageRoute(
+                    builder: (context) => const ForumPage()),
                 );
               },
             ),
@@ -46,7 +49,7 @@ class CustomNavbar extends StatelessWidget {
               width: 60,
               height: 60,
               child: Image.asset(
-                'assets/logo.png', // Pastikan path ini sesuai dengan lokasi logo Anda
+                'assets/logo.png',
                 fit: BoxFit.contain,
               ),
             ),
@@ -62,15 +65,23 @@ class CustomNavbar extends StatelessWidget {
                 );
               },
             ),
-            // Profile icon
             IconButton(
               icon: const Icon(Icons.person),
               color: const Color(0xFFFBFCF8),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ProfilePage()), // Pastikan ProfilePage didefinisikan
-                );
+                if (request.loggedIn) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Dashboard()),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginPage(),
+                    ),
+                  );
+                }
               },
             ),
           ],

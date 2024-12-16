@@ -34,6 +34,7 @@ class CookieRequest {
 
   bool loggedIn = false;
   bool initialized = false;
+  String? username;
 
   Future init() async {
     try {
@@ -97,9 +98,11 @@ class CookieRequest {
       if (response.statusCode == 200) {
         loggedIn = true;
         jsonData = json.decode(response.body);
+        username = jsonData['username'];
         print('Login successful');
       } else {
         loggedIn = false;
+        username = null;
         print('Login failed with status code: ${response.statusCode}');
         print('Response body: ${response.body}');
       }
@@ -300,6 +303,7 @@ class CookieRequest {
       if (response.statusCode == 200) {
         loggedIn = false;
         jsonData = {};
+        username = null;
         print('Logout successful');
       } else {
         loggedIn = true;
