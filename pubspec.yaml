@@ -35,7 +35,8 @@ dependencies:
   provider: ^6.0.5
   pbp_django_auth: ^0.4.0
   http: ^1.2.2
-  image_picker: ^1.1.2 # Tambahkan ini
+  image_picker: ^1.0.4
+  animated_text_kit: ^4.2.2
 
 
 
@@ -94,4 +95,3 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
 # pubspec.yaml
-  

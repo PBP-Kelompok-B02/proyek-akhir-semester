@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:proyek_akhir_semester/models/food_entry.dart';
+import 'package:provider/provider.dart';
+import 'package:proyek_akhir_semester/internal/auth.dart';
+import 'package:image_picker/image_picker.dart';
 
 class FoodDetailPage extends StatefulWidget {
   final String foodId;
@@ -18,6 +21,9 @@ class FoodDetailPage extends StatefulWidget {
 class _FoodDetailPageState extends State<FoodDetailPage> {
   late Map<String, dynamic> foodDetails;
   bool isLoading = true;
+  final TextEditingController _reviewController = TextEditingController();
+  String base64image = ""; // Add this line
+  final ImagePicker _picker = ImagePicker(); // Add this line
 
   @override
   void initState() {
@@ -42,6 +48,87 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
       });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Failed to fetch food details')),
+      );
+    }
+  }
+
+  // Add this method
+  Future<void> pickImage() async {
+    try {
+      final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedImage != null) {
+        final bytes = await pickedImage.readAsBytes();
+        setState(() {
+          base64image = base64Encode(bytes);
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Gambar berhasil dipilih')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Gagal memilih gambar')),
+      );
+    }
+  }
+
+  Future<void> submitReview() async {
+    if (_reviewController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Review tidak boleh kosong')),
+      );
+      return;
+    }
+
+    final request = context.read<CookieRequest>();
+
+    try {
+      final response = await request.post(
+        'https://b02.up.railway.app/food-details/json/${widget.foodId}/',
+        {
+          'review': _reviewController.text,
+          'image': base64image, // Add this line
+        },
+      );
+      if (response['success'] == true) {
+        _reviewController.clear();
+        setState(() {
+          base64image = ""; // Reset image
+        });
+        fetchFoodDetails(); // Refresh the reviews
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Review berhasil ditambahkan')),
+        );
+      } else {
+        throw Exception('Failed to submit review');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Gagal mengirim review')),
+      );
+    }
+  }
+
+  Future<void> deleteReview(int reviewId) async {
+    final request = context.read<CookieRequest>();
+
+    try {
+      final response = await request.post(
+        'https://b02.up.railway.app/food-details/json/delete-review/$reviewId/',
+        {}
+      );
+
+      if (response['success'] == true) {
+        fetchFoodDetails(); // Refresh the reviews
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Review berhasil dihapus')),
+        );
+      } else {
+        throw Exception('Failed to delete review');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Gagal menghapus review')),
       );
     }
   }
@@ -153,24 +240,98 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                       separatorBuilder: (context, index) => const Divider(),
                       itemBuilder: (context, index) {
                         final review = foodDetails['reviews'][index];
+                        final isCurrentUser = review['user'] ==
+                            context.watch<CookieRequest>().username;
+
                         return ListTile(
                           leading: CircleAvatar(
-                            backgroundColor: Colors.brown[100],
-                            child: Text(
-                              review['user'][0].toUpperCase(),
-                              style: const TextStyle(color: Colors.brown),
-                            ),
+                          backgroundColor: Colors.brown[100],
+                          child: Text(
+                            review['user'][0].toUpperCase(),
+                            style: const TextStyle(color: Colors.brown),
+                          ),
                           ),
                           title: Text(
-                            review['user'],
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.brown),
+                          review['user'],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.brown),
                           ),
-                          subtitle: Text(review['review']),
+                          subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(review['review']),
+                            if (review['image_url'] != null && review['image_url'].isNotEmpty)
+                            Image(
+                            image: NetworkImage('https://yumyogya.up.railway.app${review['image_url']}'),
+                            ),
+                          ],
+                          ),
+                          trailing: isCurrentUser
+                            ? IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () => deleteReview(review['id']),
+                              color: Colors.red,
+                            )
+                            : null,
                         );
                       },
                     ),
+
+              // Add review form at the bottom
+              if (context.watch<CookieRequest>().loggedIn) ...[
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _reviewController,
+                  decoration: const InputDecoration(
+                    labelText: 'Tulis ulasan Anda',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 3,
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: pickImage,
+                        icon: const Icon(Icons.image),
+                        label: const Text('Pilih Gambar'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.brown[200],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: submitReview,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.brown[700],
+                        ),
+                        child: const Text('Kirim Ulasan',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                if (base64image.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  const Text('Gambar terpilih',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ] else ...[
+                const SizedBox(height: 16),
+                const Text(
+                  'Silakan login untuk memberikan ulasan',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
             ],
           ),
         ),
