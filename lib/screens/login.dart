@@ -174,12 +174,17 @@ class _LoginPageState extends State<LoginPage> {
                   height: 50,
                   child: OutlinedButton(
                     onPressed: () async {
+                      // Panggil fungsi loginAsGuest
+                      final request = context.read<CookieRequest>();
+                      request.loginAsGuest(); // Tambahkan ini
+
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => const LandingPage(),
                         ),
                       );
+                      
                       ScaffoldMessenger.of(context)
                         ..hideCurrentSnackBar()
                         ..showSnackBar(
