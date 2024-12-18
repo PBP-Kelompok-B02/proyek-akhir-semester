@@ -106,7 +106,6 @@ class _CreateForumPageState extends State<CreateForumPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                
                 // Judul Forum Section
                 Row(
                   children: [
