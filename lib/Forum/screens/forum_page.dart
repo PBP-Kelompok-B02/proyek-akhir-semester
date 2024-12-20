@@ -62,7 +62,7 @@ class _ForumPageState extends State<ForumPage> {
             fontWeight: FontWeight.bold,
           )
         ),
-        backgroundColor: const Color(0xFF8B0000),
+        backgroundColor: const Color(0xFF592634),
       ),
       body: Container(
         color: Colors.grey[100],
