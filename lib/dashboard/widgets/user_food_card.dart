@@ -150,6 +150,7 @@ class UserFoodCard extends StatelessWidget {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(
                                           content: Text("Makanan berhasil dihapus!"),
+                                          backgroundColor: Colors.green,
                                         ),
                                       );
                                       onDelete();
@@ -157,6 +158,7 @@ class UserFoodCard extends StatelessWidget {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(
                                           content: Text("Gagal menghapus makanan."),
+                                          backgroundColor: Colors.red,
                                         ),
                                       );
                                     }
