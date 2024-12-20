@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:proyek_akhir_semester/dashboard/screens/add_food.dart';
 import 'package:proyek_akhir_semester/dashboard/screens/food_list.dart';
 import 'package:proyek_akhir_semester/internal/auth.dart';
