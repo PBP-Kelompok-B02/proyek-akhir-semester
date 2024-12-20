@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -19,7 +18,9 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
   late AnimationController _controller;
+  late AnimationController _counterController;
   late Animation<double> _scaleAnimation;
+  late Animation<double> _counterAnimation;
   String username = "";
   int foodCount = 0;
 
@@ -30,11 +31,19 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
+    _counterController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
     _scaleAnimation = CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
     );
+    _counterAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _counterController, curve: Curves.elasticOut),
+    );
     _controller.forward();
+    _counterController.forward();
     
     // Fetch initial data
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -46,6 +55,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   @override
   void dispose() {
     _controller.dispose();
+    _counterController.dispose();
     oldPasswordController.dispose();
     newPasswordController.dispose();
     confirmPasswordController.dispose();
@@ -68,6 +78,129 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
       // Handle error
       print('Error fetching food count: $e');
     }
+  }
+
+  Widget _buildFoodCounter() {
+    return ScaleTransition(
+      scale: _counterAnimation,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                const Color(0xFF602231),
+                const Color(0xFF7D2D3E),
+                const Color(0xFF602231).withOpacity(0.8),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF602231).withOpacity(0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Total Makanan',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          TweenAnimationBuilder<double>(
+                            duration: const Duration(milliseconds: 400),
+                            curve: Curves.easeOutCubic,
+                            tween: Tween(begin: 0, end: foodCount.toDouble()),
+                            builder: (context, value, child) {
+                              return Text(
+                                value.toInt().toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            },
+                          ),
+                          const Text(
+                            ' Items',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white24,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.restaurant_menu,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.white70,
+                      size: 14,
+                    ),
+                    SizedBox(width: 6),
+                    Text(
+                      'Tambahkan makanan di daftar Anda',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildAnimatedCard({
@@ -116,120 +249,197 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
  void _showChangePasswordDialog(CookieRequest request) {
   showDialog(
     context: context,
-    builder: (context) => AlertDialog(
+    builder: (context) => Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      title: const Row(
-        children: [
-          Icon(Icons.key, color: Color(0xFF602231)),
-          SizedBox(width: 10),
-          Text(
-            'Ubah Password',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF602231)),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: 400, 
+          maxHeight: 500, 
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Header
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF602231).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(Icons.key, color: Color(0xFF602231)),
+                  ),
+                  const SizedBox(width: 8),
+                  const Expanded(
+                    child: Text(
+                      'Ubah Password',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF602231),
+                      ),
+                    ),
+                  ),
+                  // Close button
+                  IconButton(
+                    icon: const Icon(Icons.close, color: Colors.grey),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildPasswordField(
+                        controller: oldPasswordController,
+                        label: 'Password Lama',
+                        icon: Icons.lock_outline,
+                      ),
+                      const SizedBox(height: 12),
+                      _buildPasswordField(
+                        controller: newPasswordController,
+                        label: 'Password Baru',
+                        icon: Icons.lock_reset,
+                      ),
+                      const SizedBox(height: 12),
+                      _buildPasswordField(
+                        controller: confirmPasswordController,
+                        label: 'Konfirmasi Password',
+                        icon: Icons.check_circle_outline,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              
+              const SizedBox(height: 16),
+              
+              // Action buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      'Batal',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    onPressed: () => _handlePasswordChange(request, context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF602231),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                    ),
+                    child: const Text('Ubah Password'),
+                  ),
+                ],
+              ),
+            ],
           ),
-        ],
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              obscureText: true,
-              controller: oldPasswordController,
-              decoration: InputDecoration(
-                labelText: 'Old Password',
-                labelStyle: const TextStyle(color: Color(0xFF602231)),
-                prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF602231)),
-                border: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Color(0xFF602231)),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Color(0xFF602231)),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              obscureText: true,
-              controller: newPasswordController,
-              decoration: InputDecoration(
-                labelText: 'New Password',
-                prefixIcon: const Icon(Icons.lock_reset, color: Color(0xFF602231)),
-                labelStyle: const TextStyle(color: Color(0xFF602231)),
-                border: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Color(0xFF602231)),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Color(0xFF602231)),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              obscureText: true,
-              controller: confirmPasswordController,
-              decoration: InputDecoration(
-                labelText: 'Confirm Password',
-                labelStyle: const TextStyle(color: Color(0xFF602231)),
-                prefixIcon: const Icon(Icons.check_circle_outline, color: Color(0xFF602231)),
-                border: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Color(0xFF602231)),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Color(0xFF602231)),
-                ),
-              ),
-            ),
-          ],
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () async => Navigator.pop(context),
-          child: const Text(
-            'Cancel',
-            style: TextStyle(color: Colors.grey),
-          ),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            final response = await request.postJson(
-              'https://b02.up.railway.app/profile/change-password-flutter/',
-              jsonEncode({
-                'old_password': oldPasswordController.text,
-                'new_password': newPasswordController.text,
-                'confirm_password': confirmPasswordController.text,
-              }),
-            );
-
-            if (response['status'] == 'success') {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Password berhasil diubah!')),
-              );
-              Navigator.pop(context);
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(response['message'])),
-              );
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF602231),
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-          ),
-          child: const Text('Ubah Password'),
-        ),
-      ],
     ),
   );
+}
+
+Widget _buildPasswordField({
+  required TextEditingController controller,
+  required String label,
+  required IconData icon,
+}) {
+  return TextField(
+    controller: controller,
+    obscureText: true,
+    decoration: InputDecoration(
+      labelText: label,
+      labelStyle: TextStyle(
+        color: const Color(0xFF602231).withOpacity(0.8),
+        fontSize: 14,
+      ),
+      prefixIcon: Icon(icon, color: const Color(0xFF602231), size: 20),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 12,
+      ),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: Color(0xFF602231)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: Color(0xFF602231), width: 2),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(
+          color: const Color(0xFF602231).withOpacity(0.5),
+        ),
+      ),
+    ),
+  );
+}
+
+Future<void> _handlePasswordChange(CookieRequest request, BuildContext context) async {
+  try {
+    final response = await request.postJson(
+      'https://b02.up.railway.app/profile/change-password-flutter/',
+      jsonEncode({
+        'old_password': oldPasswordController.text,
+        'new_password': newPasswordController.text,
+        'confirm_password': confirmPasswordController.text,
+      }),
+    );
+
+    if (!context.mounted) return;
+
+    if (response['status'] == 'success') {
+      oldPasswordController.clear();
+      newPasswordController.clear();
+      confirmPasswordController.clear();
+      
+      Navigator.pop(context);
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password berhasil diubah!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response['message']),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  } catch (e) {
+    if (!context.mounted) return;
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Terjadi kesalahan. Silakan coba lagi.'),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
 }
 
 
@@ -252,6 +462,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
               floating: false,
               pinned: true,
               backgroundColor: const Color(0xFF602231),
+              iconTheme: const IconThemeData(color: Colors.white),
               flexibleSpace: FlexibleSpaceBar(
                 centerTitle: true,
                 title: Row(
@@ -262,7 +473,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                       username,
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 14, // Ukuran lebih kecil
+                        fontSize: 14,
                       ),
                     ),
                   ],
@@ -297,58 +508,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Jumlah makanan di daftar Anda',
-                      style: TextStyle(
-                        color: Color(0xFF602231),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    TweenAnimationBuilder<double>(
-                      duration: const Duration(milliseconds: 500),
-                      tween: Tween(begin: 0, end: foodCount.toDouble()),
-                      builder: (context, value, child) {
-                        return Container(
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF602231), Color(0xFF7D2D3E)],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            borderRadius: BorderRadius.circular(15),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
-                                blurRadius: 10,
-                                offset: const Offset(0, 5),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            children: [
-                              Text(
-                                value.toInt().toString(),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const Text(
-                                'Makanan',
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                    _buildFoodCounter(), // New counter widget
                     const SizedBox(height: 30),
                     _buildAnimatedCard(
                       icon: Icons.add_circle_outline,

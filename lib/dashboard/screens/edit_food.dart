@@ -40,7 +40,10 @@ class _EditFoodPageState extends State<EditFoodPage> {
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Failed to load food details")),
+            const SnackBar(
+              content: Text("Gagal mengambil data makanan"),
+              backgroundColor: Colors.red,
+            ),
           );
           Navigator.pop(context);
         }

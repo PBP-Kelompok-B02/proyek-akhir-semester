@@ -19,7 +19,7 @@ class CustomDrawer extends StatelessWidget {
               color: Color(0xFF592634),
             ),
             child: Text(
-              request.loggedIn ? 'Hi, User!' : 'Welcome, Guest!',
+                request.loggedIn ? 'Hi, ${request.username}!' : 'Welcome, Guest!',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 24,
@@ -39,6 +39,7 @@ class CustomDrawer extends StatelessWidget {
                         String uname = response["username"];
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("$message Sampai jumpa, $uname."),
+                            backgroundColor: Colors.green,
                         ));
                         Navigator.pushReplacement(
                             context,

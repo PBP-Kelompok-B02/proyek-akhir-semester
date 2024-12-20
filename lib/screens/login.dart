@@ -124,8 +124,10 @@ class _LoginPageState extends State<LoginPage> {
                               ..hideCurrentSnackBar()
                               ..showSnackBar(
                                 SnackBar(
-                                    content: Text(
-                                        "$message Selamat datang, $uname.")),
+                                  content: Text(
+                                      "$message Selamat datang, $uname."),
+                                  backgroundColor: Colors.green,
+                                ),
                               );
                           }
                         } else {
@@ -189,7 +191,8 @@ class _LoginPageState extends State<LoginPage> {
                         ..hideCurrentSnackBar()
                         ..showSnackBar(
                           const SnackBar(
-                            content: Text("Selamat datang, Guest!"),
+                            content: Text("Selamat datang!"),
+                            backgroundColor: Colors.green,
                           ),
                         );
                     },
