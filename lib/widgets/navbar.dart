@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:proyek_akhir_semester/dashboard/screens/profile.dart';
 import 'package:proyek_akhir_semester/screens/search.dart';
-import 'package:proyek_akhir_semester/screens/landing_page.dart';
-import 'package:proyek_akhir_semester/screens/bookmarks.dart';
-import 'package:proyek_akhir_semester/screens/dashboard.dart';
-import 'package:proyek_akhir_semester/screens/forum.dart';
+import 'package:proyek_akhir_semester/screens/bookmarks_page.dart';
+import 'package:proyek_akhir_semester/Forum/screens/forum_page.dart';
+import 'package:proyek_akhir_semester/screens/login.dart'; 
+import '../internal/auth.dart';  
 
 class CustomNavbar extends StatelessWidget {
   const CustomNavbar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>(); 
+
     return BottomAppBar(
       color: const Color(0xFF592634),
       child: SizedBox(
@@ -17,15 +21,15 @@ class CustomNavbar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // Home icon
+            // Forum icon
             IconButton(
               icon: const Icon(Icons.chat),
               color: const Color(0xFFFBFCF8),
               onPressed: () {
-                // Navigate to Forum page
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ForumPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const ForumPage()),
                 );
               },
             ),
@@ -34,7 +38,6 @@ class CustomNavbar extends StatelessWidget {
               icon: const Icon(Icons.search),
               color: const Color(0xFFFBFCF8),
               onPressed: () {
-                // Navigate to Search page
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const SearchPage()),
@@ -46,7 +49,8 @@ class CustomNavbar extends StatelessWidget {
               width: 60,
               height: 60,
               child: Image.asset(
-                'assets/logo.png', // Ensure this path is correct
+                'assets/logo.png',
+                fit: BoxFit.contain,
               ),
             ),
             // Bookmark icon
@@ -61,15 +65,23 @@ class CustomNavbar extends StatelessWidget {
                 );
               },
             ),
-            // Profile icon
             IconButton(
               icon: const Icon(Icons.person),
               color: const Color(0xFFFBFCF8),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ProfilePage()),
-                );
+                if (request.loggedIn) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Dashboard()),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginPage(),
+                    ),
+                  );
+                }
               },
             ),
           ],

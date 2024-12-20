@@ -33,7 +33,9 @@ class CookieRequest {
   late SharedPreferences local;
 
   bool loggedIn = false;
+  bool isGuest = false;
   bool initialized = false;
+  String? username;
 
   Future init() async {
     try {
@@ -50,6 +52,13 @@ class CookieRequest {
       print('Error during initialization: $e');
       initialized = false;
     }
+  }
+
+  void loginAsGuest() {
+    loggedIn = false;
+    isGuest = true;
+    username = 'Guest';
+    jsonData = {'username': 'Guest'};
   }
 
   Map<String, Cookie> _loadSharedPrefs() {
@@ -96,10 +105,14 @@ class CookieRequest {
 
       if (response.statusCode == 200) {
         loggedIn = true;
+        isGuest = false;
         jsonData = json.decode(response.body);
+        username = jsonData['username'];
         print('Login successful');
       } else {
         loggedIn = false;
+        isGuest = false;
+        username = null;
         print('Login failed with status code: ${response.statusCode}');
         print('Response body: ${response.body}');
       }
@@ -111,6 +124,48 @@ class CookieRequest {
     }
   }
 
+  Future<dynamic> logout(String url) async {
+    try {
+      await init();
+      if (kIsWeb) {
+        dynamic c = _client;
+        c.withCredentials = true;
+      }
+
+      if (isGuest) {
+        // If guest, just clear the state
+        loggedIn = false;
+        isGuest = false;
+        username = null;
+        jsonData = {};
+        return {'status': true, 'message': 'Guest logged out successfully'};
+      }
+
+      http.Response response =
+          await _client.post(Uri.parse(url), headers: headers);
+
+      if (response.statusCode == 200) {
+        loggedIn = false;
+        isGuest = false;
+        jsonData = {};
+        username = null;
+        cookies = {};
+        print('Logout successful');
+      } else {
+        loggedIn = true;
+        print('Logout failed with status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+
+      return json.decode(response.body);
+    } catch (e) {
+      print('Error during logout: $e');
+      return {'status': false, 'message': 'Error during logout: $e'};
+    }
+  }
+
+  // ... [rest of your existing methods remain unchanged]
+  
   Map<String, dynamic> getJsonData() {
     return jsonData;
   }
@@ -194,10 +249,6 @@ class CookieRequest {
       String? allSetCookie = response.headers['set-cookie'];
 
       if (allSetCookie != null) {
-        allSetCookie = allSetCookie.replaceAll(
-          RegExp(r'expires=.+?;', caseSensitive: false),
-          "",
-        );
         var setCookies = allSetCookie.split(',');
 
         for (var cookie in setCookies) {
@@ -249,7 +300,7 @@ class CookieRequest {
         }
         break;
       }
-      cookies[cookieName] = Cookie(cookieValue, cookieValue, cookieExpire);
+      cookies[cookieName] = Cookie(cookieName, cookieValue, cookieExpire);
     } catch (e) {
       print('Error setting cookie: $e');
     }
@@ -283,35 +334,6 @@ class CookieRequest {
     } catch (e) {
       print('Error generating cookie header: $e');
       return "";
-    }
-  }
-
-  Future<dynamic> logout(String url) async {
-    try {
-      await init();
-      if (kIsWeb) {
-        dynamic c = _client;
-        c.withCredentials = true;
-      }
-
-      http.Response response =
-          await _client.post(Uri.parse(url), headers: headers);
-
-      if (response.statusCode == 200) {
-        loggedIn = false;
-        jsonData = {};
-        print('Logout successful');
-      } else {
-        loggedIn = true;
-        print('Logout failed with status code: ${response.statusCode}');
-        print('Response body: ${response.body}');
-      }
-
-      cookies = {};
-      return json.decode(response.body);
-    } catch (e) {
-      print('Error during logout: $e');
-      return {'status': false, 'message': 'Error during logout: $e'};
     }
   }
 }

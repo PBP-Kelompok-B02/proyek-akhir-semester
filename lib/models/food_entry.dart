@@ -69,6 +69,8 @@ class Fields {
         user: json["user"] ?? 0,
       );
 
+  get openingHours => null;
+
   Map<String, dynamic> toJson() => {
         "name": name,
         "price": price,

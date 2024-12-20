@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyek_akhir_semester/screens/login.dart';
+import 'package:proyek_akhir_semester/Forum/screens/forum_page.dart';
+import 'package:proyek_akhir_semester/widgets/bookmark_provider.dart';
 import 'internal/auth.dart';
-import 'screens/landing_page.dart';
-import 'screens/search.dart';
-import 'screens/search_results.dart';
 
 
 void main() {
@@ -16,11 +15,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (_) {
-        CookieRequest request = CookieRequest();
-        return request;
-      },
+    return MultiProvider(
+      providers: [
+        Provider(
+          create: (_) {
+            CookieRequest request = CookieRequest();
+            return request;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (_) => BookmarkProvider(),
+        ),
+      ],
       child: MaterialApp(
         title: 'Yumyogya',
         theme: ThemeData(
@@ -71,13 +77,21 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            // Tambahkan tombol untuk ke Forum Page
+            const SizedBox(height: 20), // Spacing
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>  ForumPage(),
+                  ),
+                );
+              },
+              child: const Text('Go to Forum'),
+            ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
