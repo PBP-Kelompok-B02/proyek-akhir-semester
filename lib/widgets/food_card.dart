@@ -34,12 +34,12 @@ class FoodCard extends StatelessWidget {
                     ? Image.network(
                         food.fields.image,
                         width: double.infinity,
-                        height: 150,
+                        height: 100,
                         fit: BoxFit.cover,
                       )
                     : Container(
                         width: double.infinity,
-                        height: 150,
+                        height: 100,
                         color: Colors.grey,
                         child: const Icon(Icons.image_not_supported),
                       ),
