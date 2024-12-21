@@ -55,7 +55,8 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
   // Add this method
   Future<void> pickImage() async {
     try {
-      final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? pickedImage =
+          await _picker.pickImage(source: ImageSource.gallery);
       if (pickedImage != null) {
         final bytes = await pickedImage.readAsBytes();
         setState(() {
@@ -114,9 +115,8 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
 
     try {
       final response = await request.post(
-        'https://b02.up.railway.app/food-details/json/delete-review/$reviewId/',
-        {}
-      );
+          'https://b02.up.railway.app/food-details/json/delete-review/$reviewId/',
+          {});
 
       if (response['success'] == true) {
         fetchFoodDetails(); // Refresh the reviews
@@ -245,35 +245,37 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
 
                         return ListTile(
                           leading: CircleAvatar(
-                          backgroundColor: Colors.brown[100],
-                          child: Text(
-                            review['user'][0].toUpperCase(),
-                            style: const TextStyle(color: Colors.brown),
-                          ),
+                            backgroundColor: Colors.brown[100],
+                            child: Text(
+                              review['user'][0].toUpperCase(),
+                              style: const TextStyle(color: Colors.brown),
+                            ),
                           ),
                           title: Text(
-                          review['user'],
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.brown),
+                            review['user'],
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.brown),
                           ),
                           subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(review['review']),
-                            if (review['image_url'] != null && review['image_url'].isNotEmpty)
-                            Image(
-                            image: NetworkImage('https://yumyogya.up.railway.app${review['image_url']}'),
-                            ),
-                          ],
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(review['review']),
+                              if (review['image_url'] != null &&
+                                  review['image_url'].isNotEmpty)
+                                Image(
+                                  image: NetworkImage(
+                                      'https://yumyogya.up.railway.app${review['image_url']}'),
+                                ),
+                            ],
                           ),
                           trailing: isCurrentUser
-                            ? IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () => deleteReview(review['id']),
-                              color: Colors.red,
-                            )
-                            : null,
+                              ? IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () => deleteReview(review['id']),
+                                  color: Colors.red,
+                                )
+                              : null,
                         );
                       },
                     ),
@@ -309,7 +311,8 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.brown[700],
                         ),
-                        child: const Text('Kirim Ulasan',
+                        child: const Text(
+                          'Kirim Ulasan',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -318,7 +321,8 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                 ),
                 if (base64image.isNotEmpty) ...[
                   const SizedBox(height: 8),
-                  const Text('Gambar terpilih',
+                  const Text(
+                    'Gambar terpilih',
                     style: TextStyle(color: Colors.grey),
                   ),
                 ],

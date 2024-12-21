@@ -5,7 +5,6 @@ import 'package:proyek_akhir_semester/Forum/screens/forum_page.dart';
 import 'package:proyek_akhir_semester/widgets/bookmark_provider.dart';
 import 'internal/auth.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -31,9 +30,10 @@ class MyApp extends StatelessWidget {
         title: 'Yumyogya',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSwatch(
-            primarySwatch: Colors.deepPurple,
-          ).copyWith(secondary: Colors.deepPurple[400]),
+          colorScheme: ColorScheme.fromSwatch().copyWith(
+            primary: const Color(0xFF592634),
+            secondary: const Color(0xFF592634),
+          ),
         ),
         home: const LoginPage(),
       ),
@@ -84,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>  ForumPage(),
+                    builder: (context) => ForumPage(),
                   ),
                 );
               },

@@ -71,15 +71,14 @@ class FoodCard extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                food.fields.name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-            ),
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  food.fields.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 17),
+                )),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(

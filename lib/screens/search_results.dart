@@ -19,6 +19,18 @@ class SearchResultsPage extends StatefulWidget {
 
 class _SearchResultsPageState extends State<SearchResultsPage> {
   bool sortByPriceDescending = false;
+  late Future<List<Food>> foodItemsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    foodItemsFuture = fetchFoodItems();
+  }
+
+  Future<List<Food>> fetchFoodItems() async {
+    // Replace with your actual data fetching logic
+    return widget.foodItems;
+  }
 
   void _toggleSortOrder() {
     setState(() {
@@ -45,53 +57,45 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
     int crossAxisCount = orientation == Orientation.portrait ? 2 : 4;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Search Results'),
-        backgroundColor: const Color(0xFF592634),
-      ),
-      body: Container(
-
-        color: const Color(0xFFFBFCF8),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Row(
-
-                children: [
-                  Text(
-                    'Results for "${widget.query}"',
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    icon: Icon(
-                      sortByPriceDescending
-                          ? Icons.arrow_downward
-                          : Icons.arrow_upward,
-                    ),
-                    onPressed: _toggleSortOrder,
-                  ),
-                ],
-              ),
-              Expanded(
-                child: GridView.builder(
-                  itemCount: widget.foodItems.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: crossAxisCount,
-                    crossAxisSpacing: 10.0,
-                    mainAxisSpacing: 10.0,
-                    childAspectRatio: 0.7,
-                  ),
-                  itemBuilder: (context, index) {
-                    final item = widget.foodItems[index];
-                    return FoodCard(food: item);
-                  },
-                ),
-              ),
-            ],
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: 50,
+            backgroundColor: const Color(0xFFFBFCF8),
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text('Results for ${widget.query}'),
+              background: const ColoredBox(color: Color(0xFFFBFCF8)),
+            ),
           ),
-        ),
+          SliverFillRemaining(
+            child: FutureBuilder<List<Food>>(
+              future: foodItemsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No food items found.'));
+                } else {
+                  final foodItems = snapshot.data!;
+                  return GridView.builder(
+                    itemCount: foodItems.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 10.0,
+                    ),
+                    itemBuilder: (context, index) {
+                      return FoodCard(food: foodItems[index]);
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

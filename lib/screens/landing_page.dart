@@ -13,7 +13,6 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
-
   late Future<List<Food>> foodItemsFuture;
 
   @override
@@ -40,88 +39,63 @@ class _LandingPageState extends State<LandingPage> {
     int crossAxisCount = orientation == Orientation.portrait ? 2 : 4;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Yum Yogya'),
-        backgroundColor: const Color(0xFFFBFCF8),
-      ),
       drawer: const CustomDrawer(),
       bottomNavigationBar: const CustomNavbar(),
-      body: Container(
-
-        color: const Color(0xFFFBFCF8),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                color: const Color(0xFFFBFCF8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Welcome to YumYogya!',
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Discover the best food in Yogyakarta.',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                color: const Color(0xFFFBFCF8),
-                child: Column(
-                  children: [
-
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'For You',
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: 100.0, // Increase to give space for both titles
+            backgroundColor: const Color(0xFFFBFCF8),
+            flexibleSpace: FlexibleSpaceBar(
+              // Move the 'Yum Yogya' and 'For You' into the background so they scroll away
+              background: Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Yum Yogya',
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    FutureBuilder<List<Food>>(
-                      future: foodItemsFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else if (!snapshot.hasData ||
-                            snapshot.data!.isEmpty) {
-                          return const Text('No food items found.');
-                        } else {
-                          final foodItems = snapshot.data!;
-                          return GridView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: foodItems.length,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: crossAxisCount,
-                              crossAxisSpacing: 10.0,
-                              mainAxisSpacing: 10.0,
-                            ),
-                            itemBuilder: (context, index) {
-                              final item = foodItems[index];
-                              return FoodCard(food: item);
-                            },
-                          );
-                        }
-                      },
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+          SliverFillRemaining(
+            child: FutureBuilder<List<Food>>(
+              future: foodItemsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No food items found.'));
+                } else {
+                  final foodItems = snapshot.data!;
+                  return GridView.builder(
+                    itemCount: foodItems.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount:
+                          orientation == Orientation.portrait ? 2 : 4,
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 10.0,
+                    ),
+                    itemBuilder: (context, index) {
+                      return FoodCard(food: foodItems[index]);
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

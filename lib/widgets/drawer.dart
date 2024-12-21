@@ -9,6 +9,8 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    final username =
+        request.loggedIn ? request.jsonData['username'] ?? 'User' : 'Guest';
     return Drawer(
       backgroundColor: const Color(0xFFFBFCF8),
       child: ListView(
@@ -19,38 +21,40 @@ class CustomDrawer extends StatelessWidget {
               color: Color(0xFF592634),
             ),
             child: Text(
-              request.loggedIn ? 'Hi, User!' : 'Welcome, Guest!',
+              request.loggedIn ? 'Hi, $username!' : 'Welcome, Guest!',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 24,
               ),
             ),
           ),
-          if (request.loggedIn) 
+          if (request.loggedIn)
             // Show Logout button for logged in users
             ListTile(
               leading: const Icon(Icons.exit_to_app),
               title: const Text('Logout'),
               onTap: () async {
-                final response = await request.logout("https://b02.up.railway.app/auth/logout/");
+                final response = await request
+                    .logout("https://b02.up.railway.app/auth/logout/");
                 String message = response["message"];
                 if (context.mounted) {
-                    if (response['status']) {
-                        String uname = response["username"];
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("$message Sampai jumpa, $uname."),
-                        ));
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => const LoginPage()),
-                        );
-                    } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(message),
-                            ),
-                        );
-                    }
+                  if (response['status']) {
+                    String uname = response["username"];
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("$message Sampai jumpa, $uname."),
+                    ));
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(message),
+                      ),
+                    );
+                  }
                 }
               },
             )
