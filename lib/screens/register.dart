@@ -151,6 +151,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Berhasil registrasi!'),
+                              backgroundColor: Colors.green,
                             ),
                           );
                           Navigator.pushReplacement(
@@ -162,6 +163,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Gagal registrasi!'),
+                              backgroundColor: Colors.red,
                             ),
                           );
                         }

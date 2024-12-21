@@ -90,7 +90,7 @@ class _StyledFoodFormState extends State<StyledFoodForm> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.foodId != null ? 'Edit Makanan' : 'Tambah Makanan Baru'),
+        title: Text(widget.foodId != null ? 'Edit Makanan' : 'Tambah Makanan'),
         backgroundColor: const Color(0xFF602231),
         foregroundColor: Colors.white,
       ),
