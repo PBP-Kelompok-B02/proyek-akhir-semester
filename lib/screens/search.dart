@@ -33,6 +33,12 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void navigateToResults() async {
+    if (query.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a search query")),
+      );
+      return;
+    }
     CookieRequest request = CookieRequest();
     List<Food> foodItems = await fetchFood(request);
 
@@ -86,45 +92,78 @@ class _SearchPageState extends State<SearchPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text('Filter by Price'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CheckboxListTile(
-                title: const Text('Enable Price Filter'),
-                value: filterPriceEnabled,
-                onChanged: (value) {
-                  setState(() {
-                    filterPriceEnabled = value ?? false;
-                  });
-                },
+        // Local variables to manage state within the dialog
+        bool localFilterPriceEnabled = filterPriceEnabled;
+        TextEditingController localMinPriceController =
+            TextEditingController(text: minPrice.toString());
+        TextEditingController localMaxPriceController = TextEditingController(
+            text: maxPrice == double.infinity ? '' : maxPrice.toString());
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Filter by Price'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CheckboxListTile(
+                      title: const Text('Enable Price Filter'),
+                      value: localFilterPriceEnabled,
+                      onChanged: (value) {
+                        setState(() {
+                          localFilterPriceEnabled = value ?? false;
+
+                          // If the filter is disabled, clear the text fields
+                          if (!localFilterPriceEnabled) {
+                            localMinPriceController.clear();
+                            localMaxPriceController.clear();
+                          }
+                        });
+                      },
+                    ),
+                    TextField(
+                      controller: localMinPriceController,
+                      enabled: localFilterPriceEnabled,
+                      keyboardType: TextInputType.number,
+                      decoration:
+                          const InputDecoration(labelText: 'Minimum Price'),
+                    ),
+                    TextField(
+                      controller: localMaxPriceController,
+                      enabled: localFilterPriceEnabled,
+                      keyboardType: TextInputType.number,
+                      decoration:
+                          const InputDecoration(labelText: 'Maximum Price'),
+                    ),
+                  ],
+                ),
               ),
-              TextField(
-                controller: _minPriceController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Minimum Price'),
-              ),
-              TextField(
-                controller: _maxPriceController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Maximum Price'),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  minPrice = double.tryParse(_minPriceController.text) ?? 0;
-                  maxPrice = double.tryParse(_maxPriceController.text) ??
-                      double.infinity;
-                });
-                Navigator.pop(context);
-              },
-              child: const Text('Apply'),
-            ),
-          ],
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    // Update the parent widget's state
+                    setState(() {
+                      filterPriceEnabled = localFilterPriceEnabled;
+                      minPrice =
+                          double.tryParse(localMinPriceController.text) ?? 0;
+                      maxPrice =
+                          double.tryParse(localMaxPriceController.text) ??
+                              double.infinity;
+
+                      // If the filter is disabled, reset min and max prices
+                      if (!filterPriceEnabled) {
+                        minPrice = 0;
+                        maxPrice = double.infinity;
+                      }
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Apply'),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -136,6 +175,7 @@ class _SearchPageState extends State<SearchPage> {
     _maxPriceController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,7 +184,6 @@ class _SearchPageState extends State<SearchPage> {
         backgroundColor: const Color(0xFF592634),
       ),
       body: Container(
-
         color: const Color(0xFFFBFCF8),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
