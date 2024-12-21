@@ -147,7 +147,11 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
                               );
                               if (result == true) await fetchForums();
                             },
-                            icon: const Icon(Icons.add, size: 24),
+                            icon: const Icon(
+                              Icons.add, 
+                              size: 24,
+                              color: Colors.white,
+                              ),
                             label: const Text(
                               'Tambah Forum Baru',
                               style: TextStyle(

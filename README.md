@@ -1,6 +1,6 @@
 # Proyek Akhir Semester B02
 
-[![Build Status](https://build.appcenter.ms/v0.1/apps/05563594-4c59-42d9-9846-cd928a5eaf32/branches/main/badge)](https://build.appcenter.ms/v0.1/apps/05563594-4c59-42d9-9846-cd928a5eaf32/branches/main/badge)
+[![Build status](https://build.appcenter.ms/v0.1/apps/05563594-4c59-42d9-9846-cd928a5eaf32/branches/main/badge)](https://appcenter.ms)
 
 🔗 YumYogya versi mobile dapat Anda unduh melalui:
 - [Microsoft App Center](https://install.appcenter.ms/orgs/b02-yumyogya/apps/yumyogya/distribution_groups/public)
