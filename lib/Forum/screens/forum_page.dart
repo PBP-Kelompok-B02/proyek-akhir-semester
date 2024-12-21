@@ -68,6 +68,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Row(
           children: [
             Icon(Icons.forum_outlined, color: Colors.white, size: 28),
@@ -80,6 +81,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
                 fontSize: 24,
               ),
             ),
+            
           ],
         ),
         backgroundColor: const Color(0xFF592634),

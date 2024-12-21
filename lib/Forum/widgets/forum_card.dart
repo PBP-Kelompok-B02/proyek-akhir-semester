@@ -344,8 +344,10 @@ class _ForumCardState extends State<ForumCard> {
                 ),
               ),
               child: Column(
+                
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  
                   TextField(
                     controller: _replyController,
                     decoration: InputDecoration(
@@ -368,9 +370,13 @@ class _ForumCardState extends State<ForumCard> {
                     maxLines: 3,
                   ),
                   const SizedBox(height: 12),
+                  
                   ElevatedButton.icon(
                     onPressed: _submitReply,
-                    icon: const Icon(Icons.send),
+                    icon: const Icon(
+                      Icons.send,
+                      color: Colors.white
+                      ),                    
                     label: const Text('Kirim Tanggapan'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF8B0000),

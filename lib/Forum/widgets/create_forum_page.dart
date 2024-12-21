@@ -76,6 +76,7 @@ class _CreateForumPageState extends State<CreateForumPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: const Color(0xFF592634),
         elevation: 0,
         title: const Row(
