@@ -48,6 +48,7 @@ class _ForumCardState extends State<ForumCard> {
     }
   }
 
+  // Submit reply
   Future<void> _submitReply() async {
     if (_replyController.text.isEmpty) return;
 
